@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.Utilittes.Results
+{
+    public class SuccessResult:Result
+    {
+        public SuccessResult(string message):base(true,message) 
+        {
+
+        }
+
+        public SuccessResult() : base(true)
+        {
+
+        }
+        public SuccessResult(object data, string message) : base(true, message)
+        {
+            Data = data;
+        }
+        public SuccessResult(string message, int insertedItemId) : base(true, message)
+        {
+            InsertedItemId = insertedItemId;
+        }
+
+
+        public new int? InsertedItemId { get; set; }
+        public new object Data { get; set; }
+    }
+}
+
