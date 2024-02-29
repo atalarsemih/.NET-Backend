@@ -4,7 +4,6 @@ using Core.DependencyResolvers;
 using Core.Extentions;
 using Core.Security.Encryption;
 using Core.Security.JWT;
-using Core.UnitOfWork;
 using Core.Utilittes.Ioc;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
@@ -27,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Utilittes.Ioc;
 
 namespace WebAPI1
 {
@@ -77,6 +77,7 @@ namespace WebAPI1
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI1", Version = "v1" });
             });
+            ServiceTool.Create(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

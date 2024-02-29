@@ -3,6 +3,7 @@ using Business.BusinessAspect.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspect.Autofac.Caching;
 using Core.Aspect.Autofac.Validation;
 using Core.CrossCuttingCorners.Validation;
 using Core.Utilittes.BusinessRules;
@@ -31,8 +32,9 @@ namespace Business.Concrete
             _categoryService = categoryService;
 
         }
-        [SecuredOperation("product.add")]
+        //[SecuredOperation("product.add")]//
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
         
         public IResult Add(Product product)
         {
@@ -60,7 +62,7 @@ namespace Business.Concrete
         }
 
 
-
+        [CacheAspect]
         public IDataResult<List<Product>> GetAll()
         {
             if (DateTime.Now.Hour == 25)
@@ -69,7 +71,7 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(), "Urunler Listelendi");
         }
-
+        [CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId));
@@ -79,7 +81,7 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<ProductDetails>>(_productDal.ProductDetails());
         }
-
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Update(Product product)
         {
             var result = _productDal.GetAll(p => p.CategoryID == product.CategoryID).Count;
@@ -109,5 +111,15 @@ namespace Business.Concrete
             return new SuccessResult(); 
         }
 
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if (product.UnitPrice < 10) 
+            {
+                
+            }
+            Add(product);
+            return null;
+        }
     }
 }
